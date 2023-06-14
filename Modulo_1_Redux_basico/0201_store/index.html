@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script defer>
+    // const initialState = 0;
+    const initialState = {
+      nome: 'Marcos',
+      id: 250
+    };
+
+    // O reducer recebe 2 argumentos, a 1° é o estado que ela começa e a 2° é a ação
+    //Geralmente o state inicial é 0
+    function reducer(state = initialState, action) {
+
+      //Ao final do reducer, retornamos o estado
+      return state
+
+    }
+    /*
+     Store
+       É utilizado o "Redux.createStore()". A store dá acesso ao estado global e permite despacharmos ações para modificar.
+       É fundamental executar essa função como primeiro argumento, essa função é chamada de Reducer. Ela retorna o estado atual da store
+   */
+    const store = Redux.createStore(reducer);
+    const state = store.getState();//Retorna o estado atual da aplicação
+    console.log(store)
+    console.log(state) 
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

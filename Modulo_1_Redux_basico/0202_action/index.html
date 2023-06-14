@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script defer>
+    /*
+     Action
+       Nunca é bom alterar o estado direto do [getState()], sempre que formos alterar o state, alteramos pelo action atraves do store
+       Geralmente o [action] é sempre um objeto que contem "type" e um valor caso necessario "payload"
+       No [reducer] verificamos o tipo de ação enviada e retornamos o novo estado a partir disso.
+   */
+    const initialState = 10;
+
+    function reducer(state = initialState, action) {
+      if (action.type === 'SOMAR')
+        return state + action.payload;
+      else if (action.type === 'INCREMENTAR')
+        return ++state;
+      else if (action.type === 'REDUZIR')
+        return --state;
+      else
+        return state;
+    }
+
+    const store = Redux.createStore(reducer);
+    let state = store.getState();
+    console.log(state)
+
+    store.dispatch({ type: 'SOMAR', payload: 25 })
+    store.dispatch({ type: 'SOMAR', payload: 25 })
+    store.dispatch({ type: 'SOMAR', payload: 25 })
+    store.dispatch({ type: 'SOMAR', payload: 25 })
+    //Isso por si so funciona, mas para vermos isso, temos que pegar novamente o estado com [getState()]
+    state = store.getState();
+    console.log(state)
+
+    //Não é obrigatorio passar um payload
+    store.dispatch({ type: 'INCREMENTAR' })
+    store.dispatch({ type: 'INCREMENTAR' })
+    store.dispatch({ type: 'INCREMENTAR' })
+    store.dispatch({ type: 'INCREMENTAR' })
+    state = store.getState();
+    console.log(state)
+
+
+    /*
+      [Constantes]
+        É muito comum ver codigos com Redux com [constantes], ao inves de definirmos o "type" simplesmente como string passando pelo redux, primeiro criamos um [constante] com a string daquele type.
+        Isso é feito para evitar bugs por erro de digitação
+    */
+    const INCREMENTAR = 'INCREMENTAR';
+    const REDUZIR = 'REDUZIR';
+    const SOMAR = 'SOMAR';
+
+    function reducerWithConstants(state = initialState, action) {
+      if (action.type === INCREMENTAR)
+        return state + 1;
+
+      else if (action.type === REDUZIR)
+        return state - 1;
+
+      else if (action.type === SOMAR)
+        return state + action.payload;
+
+      else
+        return state;
+    }
+
+    store.dispatch({ type: SOMAR, payload: 20 })
+    store.dispatch({ type: SOMAR, payload: 20 })
+    store.dispatch({ type: INCREMENTAR })
+    store.dispatch({ type: INCREMENTAR })
+    store.dispatch({ type: INCREMENTAR })
+    store.dispatch({ type: SOMAR, payload: 20 })
+    store.dispatch({ type: REDUZIR })
+    state = store.getState();
+    console.log(state)
+
+
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
