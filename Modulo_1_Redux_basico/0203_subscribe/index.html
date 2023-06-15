@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script defer>
+
+
+
+
+    window.onload = () => {
+      /*
+      [Subscribe]
+        Toda vez que o estado é modificado, precisamos renderizar novamente o estado para mostrar na tela
+        O [subscribe] ele é ativado, sempre que o dispatch ocorrer
+      */
+      const initialState = 10;
+      const INCREMENTAR = 'INCREMENTAR';
+      const REDUZIR = 'REDUZIR';
+      const SOMAR = 'SOMAR';
+      function reducer(state = initialState, action) {
+        if (action.type === SOMAR)
+          return state + action.payload;
+        else if (action.type === INCREMENTAR)
+          return ++state;
+        else if (action.type === REDUZIR)
+          return --state;
+        else
+          return state;
+      }
+      const store = Redux.createStore(reducer);
+
+      function incrementar() {
+        return { type: INCREMENTAR };
+      }
+      function reduzir() {
+        return { type: REDUZIR };
+      }
+      function somar(payload) {
+        return { type: SOMAR, payload };
+      }
+      const button = document.querySelector('button');
+
+      button.addEventListener('click', () => store.dispatch(incrementar()));
+
+      function render() {
+        const total = document.querySelector('#total');
+        const state = store.getState();
+        total.textContent = state;
+      }
+      render()
+      //Subscribe, função que é executada sempre que o estado muda
+      const unsubscribeRender = store.subscribe(render)
+
+      //Eu posso ter varias subscribe
+      store.subscribe(() => {
+        console.log('Renderizando')
+      })
+
+      /*
+      [Unsubscribe]
+        Caso queira que a função subscribe pare, você pode usar a [Unsubscribe], que é o retorno da ativação do método subscribe.
+      */
+      unsubscribeRender()
+    }
+
+
+  </script>
+</head>
+
+<body>
+  <h1>Total: <span id="total"></span></h1>
+  <button>Incrementar</button>
+</body>
+
+</html>

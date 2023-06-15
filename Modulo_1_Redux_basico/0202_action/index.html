@@ -81,11 +81,46 @@
     console.log(state)
 
 
+    /*
+    [Action Creator]
+      Essa é uma pratica comum de organização. Criação de funções que retornam o objeto da ação
+    */
+
+    function incrementar() {
+      return { type: INCREMENTAR };
+    }
+
+    function reduzir() {
+      return { type: REDUZIR };
+    }
+
+    function somar(payload) {
+      return { type: SOMAR, payload };
+    }
+
+    store.dispatch(incrementar());
+    store.dispatch(reduzir());
+    store.dispatch(somar(20));
+    state = store.getState();
+    console.log(state)
+
+    /*
+    [Eventos]
+      As ações geralmente serão disparadas através de eventos
+     
+    */
+    window.onload = () => {
+      const button = document.querySelector('button');
+
+      button.addEventListener('click', () => store.dispatch(incrementar()));
+    }
+
+
   </script>
 </head>
 
 <body>
-
+  <button>Incrementar</button>
 </body>
 
 </html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script defer>
+    window.onload = () => {
+      /*
+      [Switch]
+        É comum utilizar "switch statement" dentro do reducer ao inves do if else. Pois a leitura é mais facil e evita repetição do action type
+      */
+      function reducer(state = 0, action) {
+        switch (action.type) {
+          case 'INCREMENTAR':
+            return state + 1;
+          case 'REDUZIR':
+            return state - 1;
+          default:
+            return state;
+        }
+      }
+      const store = Redux.createStore(reducer);
+      const state = store.getState()
+      const button = document.querySelector('button');
+      button.addEventListener('click', () => store.dispatch({
+        type: 'INCREMENTAR'
+      }));
+      function render() {
+        const total = document.querySelector('#total');
+        const state = store.getState();
+        total.textContent = state;
+      }
+      render()
+      //Subscribe, função que é executada sempre que o estado muda
+      store.subscribe(render)
+
+
+      /*
+      [combineReducers]
+        Podemos dividir o código do reducer em diferentes funções e combiná-las ao final. 
+        Vale lembrar que ao final o reducer sempre será único e toda ação despachada irá passar por todos os reducers.
+      */
+      function contador(state = 0, action) {
+        switch (action.type) {
+          case 'INCREMENTAR':
+            return state + 1;
+          case 'REDUZIR':
+            return state - 1;
+          default:
+            return state;
+        }
+      }
+      function modal(state = false, action) {
+        switch (action.type) {
+          case 'ABRIR':
+            return true;
+          case 'FECHAR':
+            return false;
+          default:
+            return state;
+        }
+      }
+      //Combina os reducers
+      const reducer2 = Redux.combineReducers({ contador, modal });
+      const store2 = Redux.createStore(reducer2);
+
+      const state2 = store2.getState();
+      console.log(state2); // { contador: 0, modal: false }
+
+    }
+
+
+  </script>
+</head>
+
+<body>
+  <h1>Total: <span id="total"></span></h1>
+  <button>Incrementar</button>
+</body>
+
+</html>
