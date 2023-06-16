@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script src="./immer.umd.production.min.js"></script>
+  <script defer>
+    /*
+    [Regra 02 - Imutabilidade]
+      Está relacionada ao estado da função [reducer], NÃO devemos modificar ele direto, devemos retornar um estado novo
+      Ex: um obj, ao inves de modificar o objeto, criamos um novo objeto, modificamos esse novo, ai retornamos esse objeto
+  
+      A função reducer deve sempre retornar um estado novo, quando este for modificado. 
+      Nunca modifique o estado diretamente (ele deve ser imutável). O conceito de mutabilidade interfere principalmente em como lidamos com objetos e arrays.
+    */
+  </script>
+</head>
+
+<body>
+  <div id="caixa" style="background: blue; height: 50px"></div>
+
+  <script>
+    /*
+    [Immer]
+      O immer é um pacote que nos fornece uma função, na qual podemos utilizar todos os métodos que mutam arrays ou objetos, sem se preocupar com a questão de imutabilidade. Pois a função do immer será sempre produzir um objeto/array novos.
+
+      O mesmo faz parte do pacote Redux Toolkit, que é um pacote com diversas ferramentas que irão facilitar escrevermos o código do Redux.
+    */
+
+    // Com o Immer
+    const obj1 = { nome: 'André', idade: 31 };
+
+    // cria um objeto novo e modifica o valor de idade.
+    const obj2 = immer.produce(obj1, (draft) => {
+      draft.idade = 35;
+
+    });
+
+    console.log(obj1); // false
+    console.log(obj2); // false
+    console.log(obj1 === obj2); // false
+
+    /*
+    [Mas porque usar Immer?]
+      A primeira vista, o [producer] é uma função que daria para fazer no js tradicional
+      Entretanto, como immer producer, conseguimos fazer isso acima usando o proprio reducer do redux
+    */
+
+    //Immer e Reducer
+    const initialState = {
+      nome: 'André',
+      sobre: {
+        dados: {
+          idade: 31,
+        },
+      },
+    };
+    // Não é necessário o default ou return
+    // O break trava o switch statement
+    const reducer = immer.produce((state, action) => {
+
+      switch (action.type) {
+        case 'MUDAR_NOME':
+          state.nome = action.payload;
+          break;
+        case 'MUDAR_IDADE':
+          state.sobre.dados.idade = action.payload;
+          break;
+      }
+    }, initialState);
+    const store = Redux.createStore(
+      reducer,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      window.__REDUX_DEVTOOLS_EXTENSION__(),
+    );
+
+    store.dispatch({ type: "MUDAR_NOME", payload: 'Maria' })
+    store.dispatch({ type: "MUDAR_NOME", payload: 'João' })
+    store.dispatch({ type: "MUDAR_IDADE", payload: 18 })
+
+
+    // Sem o Immer
+    const reducerSemImmer = (state = initialState, action) => {
+      switch (action.type) {
+        case 'MUDAR_NOME':
+          return { ...state, nome: action.payload };
+        case 'MUDAR_IDADE':
+          return {
+            ...state,
+            sobre: {
+              ...state.sobre,
+              dados: {
+                ...state.sobre.dados,
+                idade: action.payload,
+              },
+            },
+          };
+        default:
+          return state;
+      }
+    };
+
+
+
+
+  </script>
+</body>
+
+</html>

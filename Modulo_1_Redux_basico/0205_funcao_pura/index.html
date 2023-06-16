@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+
+
+</head>
+
+<body>
+  <div id="caixa" style="background: blue; height: 50px"></div>
+
+  <script>
+    /*
+    [Regra 01 - Função Pura]
+      Funções puras retornam sempre o mesmo valor dado um mesmo argumento e não produzem efeitos colaterais. 
+
+      Ou seja, "retornar o mesmo valor" significa que os cálculos internos da função não podem depender de números aleatórios, tempo, data e outros dados que possam mudar no futuro.    
+
+      Efeitos colaterais são aqueles que impactam objetos/elementos que não pertencem a função. 
+      Exemplo: fetch, setTimeout, manipular dom, modificar objetos/arrays externas e outros.
+    */
+    // Exemplo errado
+    /*
+    [Efeitos colaterais]
+      Um dos problemas dos efeitos colaterais é o fato deles quebrarem funcionalidades da devtool como o Time Travel.
+    */
+    // function reducer(state = 0, action) {
+    //   switch (action.type) {
+    //     case 'MODIFICAR_WIDTH':
+    //       // Efeito colateral, está manipulando o DOM. Aumentando o width da caixa
+    //       const caixa = document.getElementById('caixa');
+    //       caixa.style.width = action.payload + 'px';
+    //       return action.payload;
+    //     default:
+    //       return state;
+    //   }
+    // }
+    // const store = Redux.createStore(reducer);
+    // store.dispatch({ type: 'MODIFICAR_WIDTH', payload: 100 });
+
+    // Exemplo certo
+    function reducer(state = 0, action) {
+      switch (action.type) {
+        case 'MODIFICAR_WIDTH':
+          // O reducer atualiza apenas o estado
+          return action.payload;
+        default:
+          return state;
+      }
+    }
+    //Verifica e aplica o Redux para funcionar no navegador
+    const store = Redux.createStore(reducer,
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),);
+    function render() {
+      // O dom é manipulado pela função de renderização.
+      // No caso do React seria dentro do componente.
+      const caixa = document.getElementById('caixa');
+      const state = store.getState();
+      caixa.style.width = store.getState() + 'px';
+    }
+    store.subscribe(render);
+    store.dispatch({ type: 'MODIFICAR_WIDTH', payload: 10 });
+    store.dispatch({ type: 'MODIFICAR_WIDTH', payload: 300 });
+    store.dispatch({ type: 'MODIFICAR_WIDTH', payload: 50 });
+    store.dispatch({ type: 'MODIFICAR_WIDTH', payload: 300 });
+    /*
+    [Por que fazer da maneira correta?]
+      Porque quando fazemos da forma correta, conseguimos debugar corretamente com a extensão do redux.
+      
+      Quando fazemos da maneira errada, quando vemos isso o debug, o Redux mostra os as mudanças de estados, entretanto, a maneira errada o [reducer] não é executado no debug. Por mais que funcione, quando vamos debugar, aquelas mudanças que é mostrada não é aplicada enquanto estamos debugando, voltando os estados e etc...
+    */
+  </script>
+
+</body>
+
+</html>

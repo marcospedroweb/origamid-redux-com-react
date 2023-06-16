@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+
+</head>
+
+<body>
+  <div id="caixa" style="background: blue; height: 50px"></div>
+
+  <script>
+    const initialState = { nome: 'Marcos', id: 30 };
+
+    function reducer(state = initialState, action) {
+      switch (action.type) {
+        case 'MUDAR_NOME':
+          state.nome = action.payload;
+          /* 
+            Não devemos retornar esse state, porque o redux compara se retornou um novo objeto ou o objeto anterior
+            O redux não fica verificando se o state foi mudado
+          */
+          // return state;
+
+          //Para isso funciona, devemos retornar um novo objeto com a informação que queremos substituir
+          return { ...state, nome: action.payload };
+
+        default:
+          return state
+      }
+    }
+    //Verifica e aplica o Redux para funcionar no navegador
+    const store = Redux.createStore(
+      reducer,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      window.__REDUX_DEVTOOLS_EXTENSION__(),
+    );
+
+    store.dispatch({ type: "MUDAR_NOME", payload: 'João' })
+    store.dispatch({ type: "MUDAR_NOME", payload: 'Maria' })
+    store.dispatch({ type: "MUDAR_NOME", payload: 'Luiz' })
+
+    //O mesmo problema acontece quando enviamos um type que não existe, o state não é alterado
+    store.dispatch({ type: "TESTE", payload: 'Luiz' })
+
+
+    /*
+      [Métodos que mutam e não mutam]
+    */
+
+    /*
+      [Array]
+    */
+    console.log('Arrays')
+    const array1 = [0, 1, 2, 3];
+    const array2 = array1; // cria uma referência do array 1
+    const array3 = [...array1]; // cria uma "cópia" da array original
+    console.log(array1 === array2); // true
+    console.log(array1 === array3); // false
+
+    // Métodos que mutam uma array, ou seja, ele modificam o estado direto NÃO criam um novo array
+    const array = [0, 1, 2, 4, 5];
+    array.copyWithin();
+    array.fill();
+    array.pop();
+    array.push();
+    array.reverse();
+    array.shift();
+    array.sort();
+    array.splice();
+    array.unshift();
+
+    // Alguns métodos que geram uma array nova
+    const arrayQueMuda = [0, 1, 2, 4, 5];
+    array.concat();
+    array.filter(elemento => elemento);
+    array.map(elemento => elemento);
+    array.reduce(elemento => elemento);
+    array.flat();
+    array.join();
+
+
+    /*
+     [Objetos]
+    */
+    console.log('Objetos')
+    const obj1 = { nome: 'André', idade: 31 };
+    const obj2 = obj1;  // cria uma referência do obj1
+    const obj3 = { ...obj1 }; // cria uma "cópia" da objeto original
+    const obj4 = Object.assign({}, obj1); // cria uma "cópia" da objeto original
+
+    console.log(obj1 === obj2); // true
+    console.log(obj1 === obj3); // false
+    console.log(obj1 === obj4); // false
+
+
+  </script>
+</body>
+
+</html>

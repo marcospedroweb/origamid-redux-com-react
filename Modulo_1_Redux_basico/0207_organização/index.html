@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redux</title>
+  <script src="./redux.min.js"></script>
+  <script src="./immer.umd.production.min.js"></script>
+  <script defer>
+    /*
+    [Organização]
+      Existem diferentes formas de organizarmos os arquivos do Redux. 
+      No curso vamos utilizar uma inspirada no padrão ducks, onde vamos manter as ações e o reducer relacionado em um mesmo arquivo.
+    */
+
+
+  </script>
+</head>
+
+<body>
+  <h1 id="total"></h1>
+
+  <script type="module">
+    import { incrementar, reduzir } from './contador.js';
+    import store from './configureStore.js';
+
+    function render() {
+      const { contador } = store.getState();
+      const total = document.getElementById('total');
+      total.innerText = contador;
+    }
+    render();
+    store.subscribe(render);
+
+    store.dispatch(incrementar());
+    store.dispatch(incrementar());
+    store.dispatch(incrementar());
+    store.dispatch(reduzir());
+  </script>
+
+</body>
+
+</html>
