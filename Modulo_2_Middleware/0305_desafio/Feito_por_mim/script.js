@@ -1,4 +1,5 @@
 import { fetchToken } from './store/Reducers/token.js';
+import { fetchUser } from './store/Reducers/user.js';
 import store from './store/configureStore.js';
 // Organize o código em diferentes arquivos com type module
 // Crie 2 reducers, token e user
@@ -15,5 +16,14 @@ import store from './store/configureStore.js';
 // função para puxar o token e em seguida para puxar o usuário
 
 const state = store.getState();
+
+//Pega o token
 if (state.token.data === null)
   store.dispatch(fetchToken({ username: 'dog', password: 'dog' }));
+
+const {token} = store.getState();
+
+//Pega o usuario com o token
+if(token.data)
+  store.dispatch(fetchUser(token.data));
+

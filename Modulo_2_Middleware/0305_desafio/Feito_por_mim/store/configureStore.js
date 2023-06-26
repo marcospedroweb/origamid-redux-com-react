@@ -1,4 +1,5 @@
 import token from './Reducers/token.js';
+import user from './Reducers/user.js';
 import localStorage from './middleware/localStorage.js';
 import thunk from './middleware/thunk.js';
 // import user from './Reducers/user.js';
@@ -6,7 +7,7 @@ import thunk from './middleware/thunk.js';
 //Esse [thunk], é um middleware criado para podermos lidar com funções assincronas
 
 //Combinando reducers
-const reducer = Redux.combineReducers({ token });
+const reducer = Redux.combineReducers({ token, user });
 
 // Aqui, estou descontruindo o objeto {Redux}
 const { createStore, compose, applyMiddleware } = Redux;
@@ -21,6 +22,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //[middleware] são funções que serão executadas entre o acontecimento do reducer e da action dele
 const enhancer = composeEnhancers(applyMiddleware(thunk, localStorage));
 
-const store = Redux.createStore(reducer, enhancer);
+const store = createStore(reducer, enhancer);
 
 export default store;
